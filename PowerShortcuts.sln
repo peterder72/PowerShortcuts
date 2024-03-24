@@ -6,12 +6,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShortcuts.VirtualDeskt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShortcuts.Utils", "PowerShortcuts.Utils\PowerShortcuts.Utils.csproj", "{762B8FEE-9B6B-4C02-9CF5-A61F9591AD04}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nuke", "build\nuke.csproj", "{5350884C-464D-486B-BAA6-4DEDC32EC8AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5350884C-464D-486B-BAA6-4DEDC32EC8AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5350884C-464D-486B-BAA6-4DEDC32EC8AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{757BDE38-1090-44D2-875E-3686605E0155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{757BDE38-1090-44D2-875E-3686605E0155}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{757BDE38-1090-44D2-875E-3686605E0155}.Release|Any CPU.ActiveCfg = Release|Any CPU
