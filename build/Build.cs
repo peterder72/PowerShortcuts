@@ -10,6 +10,7 @@ using ParameterAttribute = Nuke.Common.ParameterAttribute;
     GitHubActionsImage.WindowsLatest,
     AutoGenerate = true,
     On = [GitHubActionsTrigger.Push],
+    OnPushBranches = ["master"],
     InvokedTargets = new[]
     {
         nameof(Publish),
@@ -54,6 +55,7 @@ class Build : NukeBuild
             DotNetBuild(b => b
                 .SetProjectFile("PowerShortcuts.Host")
                 .SetConfiguration(Configuration)
+                .SetSelfContained(true)
                 .SetOutputDirectory(BuildDirectory)
                 .EnableNoRestore());
         });
