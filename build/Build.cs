@@ -30,7 +30,6 @@ class Build : NukeBuild
 
     static AbsolutePath DeployDirectory = RootDirectory / "Deploy";
     static AbsolutePath BuildDirectory = DeployDirectory / "PowerShortcuts";
-    static AbsolutePath OutputArchive = DeployDirectory / "PowerShortcuts.zip";
 
     Target Clean => _ => _
         .Before(Restore)
@@ -39,7 +38,6 @@ class Build : NukeBuild
             DotNetClean();
             
             if (BuildDirectory.DirectoryExists()) BuildDirectory.DeleteDirectory();
-            if (OutputArchive.FileExists()) OutputArchive.DeleteFile();
         });
 
     Target Restore => _ => _
@@ -62,6 +60,5 @@ class Build : NukeBuild
 
     Target Publish => _ => _
         .DependsOn(Compile)
-        .Executes(() => BuildDirectory.CompressTo(OutputArchive))
-        .Produces(OutputArchive);
+        .Produces(BuildDirectory);
 }
