@@ -1,6 +1,6 @@
 ﻿<component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Build release" type="DotNetFolderPublish" factoryName="Publish to folder">
-    <riderPublish configuration="Release" platform="Any CPU" runtime="win-x64" target_folder="$PROJECT_DIR$/Deploy/PowerShortcuts" target_framework="net8.0-windows" uuid_high="8465604256950404306" uuid_low="-8692450280008187563" />
+    <riderPublish configuration="Release" delete_existing_files="true" platform="Any CPU" ready_to_run="true" runtime="win-x64" self_contained="true" target_folder="$PROJECT_DIR$/Deploy/PowerShortcuts" target_framework="net8.0-windows" uuid_high="8465604256950404306" uuid_low="-8692450280008187563" />
     <method v="2" />
   </configuration>
 </component>
