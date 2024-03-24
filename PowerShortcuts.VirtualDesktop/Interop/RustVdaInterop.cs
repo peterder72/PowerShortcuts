@@ -1,8 +1,8 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace PowerShortcuts.VirtualDesktop;
+namespace PowerShortcuts.VirtualDesktop.Interop;
 
-internal static class RustInterop
+internal static class RustVdaInterop
 {
     private const string DllName = "Native/VirtualDesktopAccessor.dll";
 

@@ -2,15 +2,54 @@
 
 using GlobalHotKeys;
 using GlobalHotKeys.Native.Types;
+using PowerShortcuts.Host;
+using PowerShortcuts.VirtualDesktop;
+
+const Modifiers switchDesktopModifier = Modifiers.Alt;
+const Modifiers moveWindowModifier = Modifiers.Alt | Modifiers.Shift;
+
+VirtualKeyCode[] numberKeyCodes = [
+    VirtualKeyCode.KEY_1,
+    VirtualKeyCode.KEY_2,
+    VirtualKeyCode.KEY_3,
+    VirtualKeyCode.KEY_4,
+    VirtualKeyCode.KEY_5,
+    VirtualKeyCode.KEY_6,
+    VirtualKeyCode.KEY_7,
+    VirtualKeyCode.KEY_8,
+    VirtualKeyCode.KEY_9,
+    VirtualKeyCode.KEY_0
+];
 
 var builder = WebApplication.CreateSlimBuilder(args);
 var app = builder.Build();
 
-var mgr = new VirtualDesktopManager();
+var desktopManager = new VirtualDesktopManager();
+var windowManager = new WindowManager();
 
-void HotKeyPressed(HotKey hotKey)
+using var hotKeyManager = new HotKeyManager();
+
+using var desktopSubscription = hotKeyManager.HotKeyPressed.Subscribe(DesktopHotKeyPressed);
+using var registrations = new DisposableStack();
+
+var switchDesktopRegistrations = numberKeyCodes
+    .Select(key => hotKeyManager.Register(key, switchDesktopModifier))
+    .ToArray();
+
+var moveWindowRegistrations = numberKeyCodes
+    .Select(key => hotKeyManager.Register(key, moveWindowModifier))
+    .ToArray();
+
+registrations.PushRange(switchDesktopRegistrations);
+registrations.PushRange(moveWindowRegistrations);
+
+app.Run();
+
+return;
+
+void DesktopHotKeyPressed(HotKey hotKey)
 {
-    var number = hotKey.Key switch
+    var desktopNumber = hotKey.Key switch
     {
         VirtualKeyCode.KEY_1 => 0,
         VirtualKeyCode.KEY_2 => 1,
@@ -25,26 +64,25 @@ void HotKeyPressed(HotKey hotKey)
         _ => throw new ArgumentException()
     };
 
-    var numDesktops = mgr.GetDesktopCount();
+    var numDesktops = desktopManager.GetDesktopCount();
 
-    if (number > numDesktops - 1) return;
+    if (desktopNumber > numDesktops - 1) return;
 
-    mgr.GoToDesktopNumber(number);
-}
+    switch (hotKey.Modifiers)
+    {
+        case switchDesktopModifier:
+            desktopManager.GoToDesktopNumber(desktopNumber);
+            break;
+        case moveWindowModifier:
+        {
+            var windowInFocus = windowManager.GetWindowInFocus();
+            var currentWindowDesktop = desktopManager.GetWindowDesktopNumber(windowInFocus);
 
-using var hotKeyManager = new HotKeyManager();
-using var subscription = hotKeyManager.HotKeyPressed.Subscribe(HotKeyPressed);
+            if (currentWindowDesktop == desktopNumber) return;
 
-using (hotKeyManager.Register(VirtualKeyCode.KEY_1, Modifiers.Alt))
-using (hotKeyManager.Register(VirtualKeyCode.KEY_2, Modifiers.Alt))
-using (hotKeyManager.Register(VirtualKeyCode.KEY_3, Modifiers.Alt))
-using (hotKeyManager.Register(VirtualKeyCode.KEY_4, Modifiers.Alt))
-using (hotKeyManager.Register(VirtualKeyCode.KEY_5, Modifiers.Alt))
-using (hotKeyManager.Register(VirtualKeyCode.KEY_6, Modifiers.Alt))
-using (hotKeyManager.Register(VirtualKeyCode.KEY_7, Modifiers.Alt))
-using (hotKeyManager.Register(VirtualKeyCode.KEY_8, Modifiers.Alt))
-using (hotKeyManager.Register(VirtualKeyCode.KEY_9, Modifiers.Alt))
-using (hotKeyManager.Register(VirtualKeyCode.KEY_0, Modifiers.Alt))
-{
-    app.Run();
+            desktopManager.MoveWindowToDesktopNumber(windowInFocus, desktopNumber);
+            break;
+        }
+    }
+
 }
