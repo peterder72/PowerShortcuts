@@ -2,4 +2,6 @@ bin/
 obj/
 .idea
 Deploy/PowerShortcuts
+Deploy/PowerShortcutsInstaller
 .nuke/temp
+.vs

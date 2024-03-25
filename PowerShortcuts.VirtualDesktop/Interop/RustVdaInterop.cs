@@ -4,7 +4,7 @@ namespace PowerShortcuts.VirtualDesktop.Interop;
 
 internal static class RustVdaInterop
 {
-    private const string DllName = "Native/VirtualDesktopAccessor.dll";
+    private const string DllName = "VirtualDesktopAccessor.dll";
 
     [DllImport(DllName, CallingConvention = CallingConvention.Cdecl)]
     public static extern int GetCurrentDesktopNumber();

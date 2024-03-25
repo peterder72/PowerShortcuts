@@ -73,9 +73,11 @@
             "type": "string",
             "enum": [
               "Clean",
-              "Compile",
+              "CreateInstaller",
+              "Prepare",
               "Publish",
-              "Restore"
+              "Restore",
+              "UploadArtifacts"
             ]
           }
         },
@@ -86,9 +88,11 @@
             "type": "string",
             "enum": [
               "Clean",
-              "Compile",
+              "CreateInstaller",
+              "Prepare",
               "Publish",
-              "Restore"
+              "Restore",
+              "UploadArtifacts"
             ]
           }
         },

@@ -12,7 +12,7 @@ using ParameterAttribute = Nuke.Common.ParameterAttribute;
     OnPushBranches = ["master"],
     InvokedTargets = new[]
     {
-        nameof(Publish),
+        nameof(UploadArtifacts),
     }
 )]
 class Build : NukeBuild
@@ -23,16 +23,29 @@ class Build : NukeBuild
     ///   - Microsoft VisualStudio     https://nuke.build/visualstudio
     ///   - Microsoft VSCode           https://nuke.build/vscode
 
-    public static int Main () => Execute<Build>(x => x.Compile);
+    public static int Main () => Execute<Build>(x => x.Publish);
 
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
     static string EntrypointProject = "PowerShortcuts.Host";
+    static string InstallerProject = "PowerShortcuts.Installer";
+    static string TargetRuntime = "win-x64";
 
     static AbsolutePath DeployDirectory = RootDirectory / "Deploy";
     static AbsolutePath BuildDirectory = DeployDirectory / "PowerShortcuts";
+    static AbsolutePath InstallerDirectory = DeployDirectory / "PowerShortcutsInstaller";
+    static AbsolutePath InstallerFile = InstallerDirectory / "PowerShortcuts.Installer.msi";
 
+    Target Prepare => _ => _
+        .Before(Restore)
+        .Executes(() =>
+        {
+            DotNetToolInstall(_ => _
+                .SetPackageName("wix")
+                .SetGlobal(true));
+        });
+    
     Target Clean => _ => _
         .Before(Restore)
         .Executes(() =>
@@ -44,24 +57,42 @@ class Build : NukeBuild
 
     Target Restore => _ => _
         .DependsOn(Clean)
+        .DependsOn(Prepare)
         .Executes(() =>
         {
-            DotNetRestore(b => b.SetProjectFile(EntrypointProject));
-
-        });
-
-    Target Compile => _ => _
-        .DependsOn(Restore)
-        .Executes(() =>
-        {
-            DotNetBuild(b => b
+            DotNetRestore(b => b
                 .SetProjectFile(EntrypointProject)
-                .SetConfiguration(Configuration)
-                .SetSelfContained(true)
-                .SetOutputDirectory(BuildDirectory));
+                .SetRuntime(TargetRuntime));
+
         });
 
     Target Publish => _ => _
-        .DependsOn(Compile)
-        .Produces(BuildDirectory);
+        .DependsOn(Restore)
+        .Executes(() =>
+        {
+            DotNetPublish(b => b
+                .SetProject(EntrypointProject)
+                .SetRuntime(TargetRuntime)
+                .SetNoRestore(true)
+                .SetPublishReadyToRun(true)
+                .SetConfiguration(Configuration)
+                .SetPublishSingleFile(true)
+                .SetOutput(BuildDirectory));
+        });
+    
+    Target CreateInstaller => _ => _
+        .DependsOn(Publish)
+        .Executes(() =>
+        {
+            DotNetBuild(b => b
+                .SetProjectFile(InstallerProject)
+                .SetConfiguration(Configuration.Release)
+                .SetRuntime(TargetRuntime)
+                .SetOutputDirectory(InstallerDirectory));
+        });
+
+    Target UploadArtifacts => _ => _
+        .DependsOn(CreateInstaller)
+        .Produces(BuildDirectory)
+        .Produces(InstallerFile);
 }

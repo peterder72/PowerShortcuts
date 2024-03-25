@@ -34,10 +34,15 @@ jobs:
             .nuke/temp
             ~/.nuget/packages
           key: ${{ runner.os }}-${{ hashFiles('**/global.json', '**/*.csproj', '**/Directory.Packages.props') }}
-      - name: 'Run: Publish'
-        run: ./build.cmd Publish
+      - name: 'Run: UploadArtifacts'
+        run: ./build.cmd UploadArtifacts
       - name: 'Publish: PowerShortcuts'
         uses: actions/upload-artifact@v3
         with:
           name: PowerShortcuts
           path: Deploy/PowerShortcuts
+      - name: 'Publish: PowerShortcuts.Installer.msi'
+        uses: actions/upload-artifact@v3
+        with:
+          name: PowerShortcuts.Installer.msi
+          path: Deploy/PowerShortcutsInstaller/PowerShortcuts.Installer.msi
