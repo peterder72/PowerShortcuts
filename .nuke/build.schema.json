@@ -76,7 +76,6 @@
               "CreateInstaller",
               "Prepare",
               "Publish",
-              "Restore",
               "UploadArtifacts"
             ]
           }
@@ -91,7 +90,6 @@
               "CreateInstaller",
               "Prepare",
               "Publish",
-              "Restore",
               "UploadArtifacts"
             ]
           }

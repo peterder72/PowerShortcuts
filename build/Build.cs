@@ -38,7 +38,7 @@ class Build : NukeBuild
     static AbsolutePath InstallerFile = InstallerDirectory / "PowerShortcuts.Installer.msi";
 
     Target Prepare => _ => _
-        .Before(Restore)
+        .Before(Publish)
         .Executes(() =>
         {
             DotNetToolInstall(_ => _
@@ -47,7 +47,7 @@ class Build : NukeBuild
         });
     
     Target Clean => _ => _
-        .Before(Restore)
+        .Before(Publish)
         .Executes(() =>
         {
             DotNetClean();
@@ -55,25 +55,13 @@ class Build : NukeBuild
             if (BuildDirectory.DirectoryExists()) BuildDirectory.DeleteDirectory();
         });
 
-    Target Restore => _ => _
-        .DependsOn(Clean)
-        .DependsOn(Prepare)
-        .Executes(() =>
-        {
-            DotNetRestore(b => b
-                .SetProjectFile(EntrypointProject)
-                .SetRuntime(TargetRuntime));
-
-        });
-
     Target Publish => _ => _
-        .DependsOn(Restore)
+        .DependsOn(Clean)
         .Executes(() =>
         {
             DotNetPublish(b => b
                 .SetProject(EntrypointProject)
                 .SetRuntime(TargetRuntime)
-                .SetNoRestore(true)
                 .SetPublishReadyToRun(true)
                 .SetConfiguration(Configuration)
                 .SetPublishSingleFile(true)
