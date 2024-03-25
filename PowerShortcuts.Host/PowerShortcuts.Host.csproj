@@ -1,19 +1,23 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
         <TargetFramework>net8.0-windows</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>PowerShortcuts.Host</RootNamespace>
-        <PublishReadyToRun>true</PublishReadyToRun>
-        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-PowerShortcuts.WinService-C2C3B150-AAD8-4281-AF6E-14EA086DB237</UserSecretsId>
+        <RootNamespace>PowerShortcuts.WinService</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\PowerShortcuts.Core\PowerShortcuts.Core.csproj" />
-      <ProjectReference Include="..\PowerShortcuts.Utils\PowerShortcuts.Utils.csproj" />
-      <ProjectReference Include="..\PowerShortcuts.VirtualDesktop\PowerShortcuts.VirtualDesktop.csproj" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\PowerShortcuts.Core\PowerShortcuts.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\PowerShortcuts.Core\PowerShortcuts.Core.csproj" />
+    </ItemGroup>
 </Project>

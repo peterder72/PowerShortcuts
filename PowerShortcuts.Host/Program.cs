@@ -1,16 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-
 using PowerShortcuts.Core.Composition;
-using PowerShortcuts.Core.Interface;
+using PowerShortcuts.WinService;
 
-var builder = WebApplication.CreateSlimBuilder(args);
+var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddPowerShortcutsCore();
+builder.Services.AddHostedService<WindowsBackgroundService>();
 
-using var app = builder.Build();
+using var host = builder.Build();
 
-var service = app.Services.GetRequiredService<IPowerShortcutsService>();
-
-service.Initialize();
-
-app.Run();
+host.Run();

@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShortcuts.Host", "PowerShortcuts.Host\PowerShortcuts.Host.csproj", "{757BDE38-1090-44D2-875E-3686605E0155}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShortcuts.VirtualDesktop", "PowerShortcuts.VirtualDesktop\PowerShortcuts.VirtualDesktop.csproj", "{47658F9B-9818-4C33-98D3-449F57E8B951}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShortcuts.Utils", "PowerShortcuts.Utils\PowerShortcuts.Utils.csproj", "{762B8FEE-9B6B-4C02-9CF5-A61F9591AD04}"
@@ -9,6 +7,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nuke", "build\nuke.csproj", "{5350884C-464D-486B-BAA6-4DEDC32EC8AA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShortcuts.Core", "PowerShortcuts.Core\PowerShortcuts.Core.csproj", "{62694000-6885-4DA6-A54F-32B88F65FB9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShortcuts.Host", "PowerShortcuts.Host\PowerShortcuts.Host.csproj", "{52E9FB70-D7D7-4495-8180-0DD9CBA2D4C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,10 +18,6 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5350884C-464D-486B-BAA6-4DEDC32EC8AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5350884C-464D-486B-BAA6-4DEDC32EC8AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{757BDE38-1090-44D2-875E-3686605E0155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{757BDE38-1090-44D2-875E-3686605E0155}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{757BDE38-1090-44D2-875E-3686605E0155}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{757BDE38-1090-44D2-875E-3686605E0155}.Release|Any CPU.Build.0 = Release|Any CPU
 		{47658F9B-9818-4C33-98D3-449F57E8B951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{47658F9B-9818-4C33-98D3-449F57E8B951}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47658F9B-9818-4C33-98D3-449F57E8B951}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -34,5 +30,9 @@ Global
 		{62694000-6885-4DA6-A54F-32B88F65FB9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62694000-6885-4DA6-A54F-32B88F65FB9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62694000-6885-4DA6-A54F-32B88F65FB9D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52E9FB70-D7D7-4495-8180-0DD9CBA2D4C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E9FB70-D7D7-4495-8180-0DD9CBA2D4C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E9FB70-D7D7-4495-8180-0DD9CBA2D4C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E9FB70-D7D7-4495-8180-0DD9CBA2D4C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
