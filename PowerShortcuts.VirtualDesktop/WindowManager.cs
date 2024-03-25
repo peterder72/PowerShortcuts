@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using PowerShortcuts.Host;
+using PowerShortcuts.VirtualDesktop.Interface;
 using PowerShortcuts.VirtualDesktop.Interop;
 using PowerShortcuts.VirtualDesktop.Interop.Com;
 using PowerShortcuts.VirtualDesktop.Interop.Com.Implementation;
@@ -11,7 +12,7 @@ using IServiceProvider = PowerShortcuts.VirtualDesktop.Interop.Com.Interface.ISe
 
 namespace PowerShortcuts.VirtualDesktop;
 
-public sealed class WindowManager: IDisposable
+internal sealed class WindowManager: IWindowManager
 {
     private readonly ApplicationViewCollection m_ApplicationViewCollection;
     private readonly DisposableStack m_Disposables = new();

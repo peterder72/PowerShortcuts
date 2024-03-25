@@ -11,12 +11,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\PowerShortcuts.Core\PowerShortcuts.Core.csproj" />
       <ProjectReference Include="..\PowerShortcuts.Utils\PowerShortcuts.Utils.csproj" />
       <ProjectReference Include="..\PowerShortcuts.VirtualDesktop\PowerShortcuts.VirtualDesktop.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="GlobalHotKeys.Windows" Version="0.1.0" />
     </ItemGroup>
 
 </Project>

@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShortcuts.Utils", "Pow
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "nuke", "build\nuke.csproj", "{5350884C-464D-486B-BAA6-4DEDC32EC8AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerShortcuts.Core", "PowerShortcuts.Core\PowerShortcuts.Core.csproj", "{62694000-6885-4DA6-A54F-32B88F65FB9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,5 +30,9 @@ Global
 		{762B8FEE-9B6B-4C02-9CF5-A61F9591AD04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{762B8FEE-9B6B-4C02-9CF5-A61F9591AD04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{762B8FEE-9B6B-4C02-9CF5-A61F9591AD04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62694000-6885-4DA6-A54F-32B88F65FB9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62694000-6885-4DA6-A54F-32B88F65FB9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62694000-6885-4DA6-A54F-32B88F65FB9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62694000-6885-4DA6-A54F-32B88F65FB9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

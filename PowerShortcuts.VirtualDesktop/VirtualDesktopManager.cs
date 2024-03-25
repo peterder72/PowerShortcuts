@@ -1,10 +1,11 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
+using PowerShortcuts.VirtualDesktop.Interface;
 using PowerShortcuts.VirtualDesktop.Interop;
 
 namespace PowerShortcuts.VirtualDesktop;
 
-public sealed class VirtualDesktopManager
+internal sealed class VirtualDesktopManager: IVirtualDesktopManager
 {
     public int GetCurrentDesktopNumber() =>
         RustVdaInterop.GetCurrentDesktopNumber();
