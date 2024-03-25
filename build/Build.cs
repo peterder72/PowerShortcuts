@@ -9,7 +9,6 @@ using ParameterAttribute = Nuke.Common.ParameterAttribute;
 [GitHubActions("continuous",
     GitHubActionsImage.WindowsLatest,
     AutoGenerate = true,
-    On = [GitHubActionsTrigger.Push],
     OnPushBranches = ["master"],
     InvokedTargets = new[]
     {
@@ -29,6 +28,8 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
+    static string EntrypointProject = "PowerShortcuts.Host";
+
     static AbsolutePath DeployDirectory = RootDirectory / "Deploy";
     static AbsolutePath BuildDirectory = DeployDirectory / "PowerShortcuts";
 
@@ -45,7 +46,8 @@ class Build : NukeBuild
         .DependsOn(Clean)
         .Executes(() =>
         {
-            DotNetRestore();
+            DotNetRestore(b => b.SetProjectFile(EntrypointProject));
+
         });
 
     Target Compile => _ => _
@@ -53,11 +55,10 @@ class Build : NukeBuild
         .Executes(() =>
         {
             DotNetBuild(b => b
-                .SetProjectFile("PowerShortcuts.Host")
+                .SetProjectFile(EntrypointProject)
                 .SetConfiguration(Configuration)
                 .SetSelfContained(true)
-                .SetOutputDirectory(BuildDirectory)
-                .EnableNoRestore());
+                .SetOutputDirectory(BuildDirectory));
         });
 
     Target Publish => _ => _

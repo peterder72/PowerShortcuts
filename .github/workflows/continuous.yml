@@ -16,7 +16,10 @@
 
 name: continuous
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   windows-latest:
