@@ -35,7 +35,7 @@ class Build : NukeBuild
     static AbsolutePath DeployDirectory = RootDirectory / "Deploy";
     static AbsolutePath BuildDirectory = DeployDirectory / "PowerShortcuts";
     static AbsolutePath InstallerDirectory = DeployDirectory / "PowerShortcutsInstaller";
-    static AbsolutePath InstallerFile = InstallerDirectory / "PowerShortcuts.Installer.msi";
+    static AbsolutePath InstallerFile = InstallerDirectory / "PowerShortcuts.msi";
 
     Target Prepare => _ => _
         .Before(Publish)
@@ -53,6 +53,7 @@ class Build : NukeBuild
             DotNetClean();
             
             if (BuildDirectory.DirectoryExists()) BuildDirectory.DeleteDirectory();
+            if (InstallerDirectory.DirectoryExists()) InstallerDirectory.DeleteDirectory();
         });
 
     Target Publish => _ => _
@@ -74,9 +75,8 @@ class Build : NukeBuild
         {
             DotNetBuild(b => b
                 .SetProjectFile(InstallerProject)
-                .SetConfiguration(Configuration.Release)
-                .SetRuntime(TargetRuntime)
-                .SetOutputDirectory(InstallerDirectory));
+                .SetConfiguration(Configuration)
+                .SetRuntime(TargetRuntime));
         });
 
     Target UploadArtifacts => _ => _
