@@ -1,6 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
+        <Version>$(ProductVersion)</Version>
+        <AssemblyVersion>$(ProductVersion)</AssemblyVersion>
+        <FileVersion>$(ProductVersion)</FileVersion>
+        <Authors>$(Author)</Authors>
+        <Company>$(Company)</Company>
+        <Product>$(Product)</Product>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <TargetFramework>net8.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>

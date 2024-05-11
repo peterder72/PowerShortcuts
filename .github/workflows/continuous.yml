@@ -41,8 +41,8 @@ jobs:
         with:
           name: PowerShortcuts
           path: Deploy/PowerShortcuts
-      - name: 'Publish: PowerShortcuts.msi'
+      - name: 'Publish: PowerShortcutsInstaller'
         uses: actions/upload-artifact@v3
         with:
-          name: PowerShortcuts.msi
-          path: Deploy/PowerShortcutsInstaller/PowerShortcuts.msi
+          name: PowerShortcutsInstaller
+          path: Deploy/PowerShortcutsInstaller

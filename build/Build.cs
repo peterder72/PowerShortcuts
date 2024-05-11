@@ -35,7 +35,7 @@ class Build : NukeBuild
     static readonly AbsolutePath DeployDirectory = RootDirectory / "Deploy";
     static readonly AbsolutePath BuildDirectory = DeployDirectory / "PowerShortcuts";
     static readonly AbsolutePath InstallerDirectory = DeployDirectory / "PowerShortcutsInstaller";
-    static readonly AbsolutePath InstallerFile = InstallerDirectory / "PowerShortcuts.msi";
+    static readonly AbsolutePath InstallerFile = InstallerDirectory / "PowerShortcutsInstaller_*.msi";
 
     Target Prepare => _ => _
         .Before(Publish)
