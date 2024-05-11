@@ -18,6 +18,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{1BA47782-CD56-4AA3-B50F-B8267558F86D}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		LICENSE.md = LICENSE.md
+		Directory.Build.props = Directory.Build.props
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Global

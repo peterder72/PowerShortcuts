@@ -1,4 +1,4 @@
-﻿namespace PowerShortcuts.WinService.Interface;
+﻿namespace PowerShortcuts.Host.Interface;
 
 internal enum TrayClickEventType
 {

@@ -1,7 +1,7 @@
 ﻿using System.Reactive.Subjects;
-using PowerShortcuts.WinService.Interface;
+using PowerShortcuts.Host.Interface;
 
-namespace PowerShortcuts.WinService;
+namespace PowerShortcuts.Host;
 
 internal sealed class HostSystemEvents(ILogger<HostSystemEvents> logger): 
     IHostSystemEvents,

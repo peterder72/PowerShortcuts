@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace PowerShortcuts.WinService;
+namespace PowerShortcuts.Host;
 
 // Thank you to this fella for this extension class
 // https://medium.com/@cilliemalan/how-to-await-a-cancellation-token-in-c-cbfc88f28fa2

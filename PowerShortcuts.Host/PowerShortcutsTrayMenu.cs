@@ -1,10 +1,10 @@
 ﻿using System.Drawing;
 using System.Reactive.Subjects;
 using H.NotifyIcon.Core;
+using PowerShortcuts.Host.Interface;
 using PowerShortcuts.Utils;
-using PowerShortcuts.WinService.Interface;
 
-namespace PowerShortcuts.WinService;
+namespace PowerShortcuts.Host;
 
 internal sealed class PowerShortcutsTrayMenu : IPowerShortcutsTrayControl
 {

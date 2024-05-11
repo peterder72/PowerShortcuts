@@ -1,6 +1,6 @@
-﻿using PowerShortcuts.WinService.Interface;
+﻿using PowerShortcuts.Host.Interface;
 
-namespace PowerShortcuts.WinService.Composition;
+namespace PowerShortcuts.Host.Composition;
 
 internal static class BackgroundServiceCompositionExtensions
 {

@@ -10,10 +10,10 @@ using ParameterAttribute = Nuke.Common.ParameterAttribute;
     GitHubActionsImage.WindowsLatest,
     AutoGenerate = true,
     OnPushBranches = ["master"],
-    InvokedTargets = new[]
-    {
-        nameof(UploadArtifacts),
-    }
+    InvokedTargets =
+    [
+        nameof(UploadArtifacts)
+    ]
 )]
 class Build : NukeBuild
 {
@@ -28,14 +28,14 @@ class Build : NukeBuild
     [Parameter("Configuration to build - Default is 'Debug' (local) or 'Release' (server)")]
     readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 
-    static string EntrypointProject = "PowerShortcuts.Host";
-    static string InstallerProject = "PowerShortcuts.Installer";
-    static string TargetRuntime = "win-x64";
+    const string EntrypointProject = "PowerShortcuts.Host";
+    const string InstallerProject = "PowerShortcuts.Installer";
+    const string TargetRuntime = "win-x64";
 
-    static AbsolutePath DeployDirectory = RootDirectory / "Deploy";
-    static AbsolutePath BuildDirectory = DeployDirectory / "PowerShortcuts";
-    static AbsolutePath InstallerDirectory = DeployDirectory / "PowerShortcutsInstaller";
-    static AbsolutePath InstallerFile = InstallerDirectory / "PowerShortcuts.msi";
+    static readonly AbsolutePath DeployDirectory = RootDirectory / "Deploy";
+    static readonly AbsolutePath BuildDirectory = DeployDirectory / "PowerShortcuts";
+    static readonly AbsolutePath InstallerDirectory = DeployDirectory / "PowerShortcutsInstaller";
+    static readonly AbsolutePath InstallerFile = InstallerDirectory / "PowerShortcutsInstaller_*.msi";
 
     Target Prepare => _ => _
         .Before(Publish)

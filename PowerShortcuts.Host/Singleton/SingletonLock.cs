@@ -1,4 +1,4 @@
-﻿namespace PowerShortcuts.WinService.Singleton;
+﻿namespace PowerShortcuts.Host.Singleton;
 
 internal sealed class SingletonLock: IDisposable
 {
