@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Design;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using PowerShortcuts.Core.Interface;
 using PowerShortcuts.VirtualDesktop.Composition;
 

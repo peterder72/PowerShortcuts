@@ -3,4 +3,5 @@
 public interface IPowerShortcutsService: IDisposable
 {
     public void Initialize();
+    public void Terminate();
 }

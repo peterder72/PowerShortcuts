@@ -1,14 +1,9 @@
-﻿using System.IO.Compression;
-using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
-using System.Text;
-using PowerShortcuts.Host;
+﻿using System.Text;
+using PowerShortcuts.Utils;
 using PowerShortcuts.VirtualDesktop.Interface;
 using PowerShortcuts.VirtualDesktop.Interop;
-using PowerShortcuts.VirtualDesktop.Interop.Com;
 using PowerShortcuts.VirtualDesktop.Interop.Com.Implementation;
 using PowerShortcuts.VirtualDesktop.Interop.Com.Interface;
-using IServiceProvider = PowerShortcuts.VirtualDesktop.Interop.Com.Interface.IServiceProvider;
 
 namespace PowerShortcuts.VirtualDesktop;
 

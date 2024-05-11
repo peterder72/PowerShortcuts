@@ -65,7 +65,7 @@ class Build : NukeBuild
                 .SetRuntime(TargetRuntime)
                 .SetPublishReadyToRun(true)
                 .SetConfiguration(Configuration)
-                .SetPublishSingleFile(true)
+                .SetSelfContained(true)
                 .SetOutput(BuildDirectory));
         });
     

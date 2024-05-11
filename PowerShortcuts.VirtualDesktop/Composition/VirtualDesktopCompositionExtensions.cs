@@ -1,5 +1,4 @@
-﻿using System.Runtime.Serialization;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using PowerShortcuts.VirtualDesktop.Interface;
 
 namespace PowerShortcuts.VirtualDesktop.Composition;

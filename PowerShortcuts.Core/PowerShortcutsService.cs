@@ -1,19 +1,23 @@
-﻿using System.Net.Http.Headers;
-using GlobalHotKeys;
+﻿using GlobalHotKeys;
 using GlobalHotKeys.Native.Types;
+using Microsoft.Extensions.Logging;
 using PowerShortcuts.Core.Interface;
-using PowerShortcuts.Host;
+using PowerShortcuts.Utils;
 using PowerShortcuts.VirtualDesktop.Interface;
 
 namespace PowerShortcuts.Core;
 
-internal sealed class PowerShortcutsService(IVirtualDesktopManager desktopManager, IWindowManager windowManager): IPowerShortcutsService
+internal sealed class PowerShortcutsService(
+    IVirtualDesktopManager desktopManager, 
+    IWindowManager windowManager,
+    ILogger<IPowerShortcutsService> logger): IPowerShortcutsService
 {
     private const Modifiers SwitchDesktopModifier = Modifiers.Alt;
     private const Modifiers MoveWindowModifier = Modifiers.Alt | Modifiers.Shift;
 
-    private readonly DisposableStack m_Disposables = new();
-    private bool m_Initialized = false;
+    private readonly DisposableStack m_SubscriptionDisposables = new();
+    private bool m_Initialized;
+    private bool m_Disposed;
 
     private readonly VirtualKeyCode[] m_NumberKeyCodes =
     [
@@ -37,9 +41,9 @@ internal sealed class PowerShortcutsService(IVirtualDesktopManager desktopManage
         var desktopSubscription = hotKeyManager.HotKeyPressed.Subscribe(DesktopHotKeyPressed);
         var registrations = new DisposableStack();
         
-        m_Disposables.Push(desktopSubscription);
-        m_Disposables.Push(hotKeyManager);
-        m_Disposables.Push(registrations);
+        m_SubscriptionDisposables.Push(desktopSubscription);
+        m_SubscriptionDisposables.Push(hotKeyManager);
+        m_SubscriptionDisposables.Push(registrations);
             
         var switchDesktopRegistrations = m_NumberKeyCodes
             .Select(key => hotKeyManager.Register(key, SwitchDesktopModifier))
@@ -53,9 +57,18 @@ internal sealed class PowerShortcutsService(IVirtualDesktopManager desktopManage
         registrations.PushRange(moveWindowRegistrations);
 
         m_Initialized = true;
+
+        logger.LogInformation("Shortcuts service initialized");
     }
-    
-    
+
+    public void Terminate()
+    {
+        m_SubscriptionDisposables.DisposeItems();
+        m_Initialized = false;
+        logger.LogInformation("Shortcuts service terminated");
+    }
+
+
     private void DesktopHotKeyPressed(HotKey hotKey)
     {
         var desktopNumber = hotKey.Key switch
@@ -97,8 +110,11 @@ internal sealed class PowerShortcutsService(IVirtualDesktopManager desktopManage
 
     public void Dispose()
     {
-        Console.WriteLine("Destroyed");
-        m_Disposables.Dispose();
+        if (m_Disposed) throw new ObjectDisposedException(nameof(PowerShortcutsService));
         m_Initialized = false;
+        m_SubscriptionDisposables.Dispose();
+        
+        logger.LogInformation("Shortcuts service disposed");
+        m_Disposed = true;
     }
 }

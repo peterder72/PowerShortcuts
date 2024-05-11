@@ -1,42 +1,63 @@
 using PowerShortcuts.Core.Interface;
+using PowerShortcuts.WinService.Interface;
 
 namespace PowerShortcuts.WinService;
 
-public sealed class WindowsBackgroundService(
+internal sealed class WindowsBackgroundService(
     IPowerShortcutsService powerShortcutsService,
-    ILogger<WindowsBackgroundService> logger) : BackgroundService
+    IPowerShortcutsTrayControl powerShortcutsTrayControl,
+    IHostSystemEvents hostSystemEvents,
+    ILogger<WindowsBackgroundService> logger) : IHostedService 
 {
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    private const string NotificationTitle = "PowerShortcuts";
+
+    public Task StartAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("PowerShortcutsService starting");
+
         try
         {
+            powerShortcutsTrayControl.TrayClicksObservable.Subscribe(OnTrayClick);
+            powerShortcutsTrayControl.Create();
             powerShortcutsService.Initialize();
-            await stoppingToken;
-        }
-        catch (OperationCanceledException)
-        {
-            logger.LogInformation("PowerShortcutsService shutdown requested");
-            // When the stopping token is canceled, for example, a call made from services.msc,
-            // we shouldn't exit with a non-zero exit code. In other words, this is expected...
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "{Message}", ex.Message);
+            logger.LogError(ex, "Init error: {Message}", ex.Message);
 
-            // Terminates this process and returns an exit code to the operating system.
-            // This is required to avoid the 'BackgroundServiceExceptionBehavior', which
-            // performs one of two scenarios:
-            // 1. When set to "Ignore": will do nothing at all, errors cause zombie services.
-            // 2. When set to "StopHost": will cleanly stop the host, and log errors.
-            //
-            // In order for the Windows Service Management system to leverage configured
-            // recovery options, we need to terminate the process with a non-zero exit code.
-            Environment.Exit(1);
+            powerShortcutsTrayControl.ShowNotification(NotificationTitle,
+                $"Error during initialization: {ex.Message}",
+                NotificationIconType.Error);
+
+            throw;
         }
-        finally
+
+        powerShortcutsTrayControl.ShowNotification(NotificationTitle, "PowerShortcuts is running",
+            NotificationIconType.Info);
+
+        return Task.CompletedTask;
+    }
+
+    private void OnTrayClick(TrayClickEventType ev)
+    {
+        switch (ev)
         {
-            logger.LogInformation("PowerShortcutsService shutting down");
+            case TrayClickEventType.Exit:
+                hostSystemEvents.SystemExitRequested();
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(ev), ev, null);
         }
     }
+
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        logger.LogInformation("PowerShortcutsService shutting down");
+
+        powerShortcutsService.Terminate();
+        powerShortcutsTrayControl.Terminate();
+
+        return Task.CompletedTask;
+    }
+
 }

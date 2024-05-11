@@ -1,9 +1,8 @@
-﻿namespace PowerShortcuts.Host;
+﻿namespace PowerShortcuts.Utils;
 
 public class DisposableStack: IDisposable
 {
     private readonly Stack<IDisposable> m_Stack = new();
-
 
     public void PushRange(IEnumerable<IDisposable> enumerable)
     {
@@ -17,14 +16,19 @@ public class DisposableStack: IDisposable
     {
         m_Stack.Push(disposable);
     }
-    
-    public void Dispose()
+
+    public void DisposeItems()
     {
         foreach (var element in m_Stack)
         {
             element.Dispose();
         }
-        
         m_Stack.Clear();
+    }
+
+    public void Dispose()
+    {
+        DisposeItems();
+        GC.SuppressFinalize(this);
     }
 }

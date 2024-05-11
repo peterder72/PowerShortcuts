@@ -1,24 +1,49 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using WixSharp;
 
-internal class Program
+namespace PowerShortcuts.Installer
 {
-    public static void Main(string[] args)
+    internal class Program
     {
-        var project = new Project("PowerShortcuts",
-            new Dir(@"%LocalAppDataFolder%\Osetr\PowerShortcuts",
-                new File(@"../Deploy/PowerShortcuts/PowerShortcuts.Host.exe"),
-                new File(@"../Deploy/PowerShortcuts/VirtualDesktopAccessor.dll")
-            ));
+        private const string AppName = "PowerShortcuts";
+        private static readonly Version AppVersion = new Version(0, 1, 0);
 
-        project.Version = new Version(0, 0, 2);
+        private const string MainExecutableName = "PowerShortcuts.Host.exe";
 
-        project.OutDir = "../Deploy/PowerShortcutsInstaller";
-        project.UI = WUI.WixUI_Minimal;
+        private const string PowerShortcutsBuildRoot = @"..\Deploy\PowerShortcuts";
+        private const string PowerShortcutsInstallDir = @"%LocalAppDataFolder%\Osetr\PowerShortcuts";
+    
+        private static readonly string[] ShortcutDirectories = { "%ProgramMenu%", "%Startup%" };
 
-        project.InstallScope = InstallScope.perUser;
-        project.GUID = new Guid("642cc5a9-eb76-4708-a619-3e3bd5dea645");
+        public static void Main(string[] args)
+        {
+            var installDir = new Dir(PowerShortcutsInstallDir, new Files(Path.Combine(PowerShortcutsBuildRoot, "*.*")));
+        
+            var project = new Project(AppName, installDir);
 
-        Compiler.BuildMsi(project);
+            project.Version = AppVersion;
+
+            project.OutDir = "../Deploy/PowerShortcutsInstaller";
+            project.UI = WUI.WixUI_Minimal;
+
+            project.InstallScope = InstallScope.perUser;
+            project.GUID = new Guid("642cc5a9-eb76-4708-a619-3e3bd5dea645");
+
+            var shortcutName = $"{AppName} {AppVersion}";
+            var detachedArguments = "-d";
+
+            project.ResolveWildCards().FindFile(f => f.Name.EndsWith(MainExecutableName))
+                .First()
+                .Shortcuts = ShortcutDirectories
+                .Select(x => new FileShortcut(shortcutName, x)
+                {
+                    Arguments = detachedArguments
+                })
+                .ToArray(); 
+
+            Compiler.BuildMsi(project);
+        }
     }
 }
