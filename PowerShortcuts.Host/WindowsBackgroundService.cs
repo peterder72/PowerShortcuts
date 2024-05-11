@@ -1,7 +1,7 @@
 using PowerShortcuts.Core.Interface;
-using PowerShortcuts.WinService.Interface;
+using PowerShortcuts.Host.Interface;
 
-namespace PowerShortcuts.WinService;
+namespace PowerShortcuts.Host;
 
 internal sealed class WindowsBackgroundService(
     IPowerShortcutsService powerShortcutsService,

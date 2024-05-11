@@ -5,7 +5,6 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-PowerShortcuts.WinService-C2C3B150-AAD8-4281-AF6E-14EA086DB237</UserSecretsId>
-        <RootNamespace>PowerShortcuts.WinService</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

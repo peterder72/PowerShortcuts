@@ -1,13 +1,12 @@
 using System.Diagnostics;
 using System.Reflection;
 using PowerShortcuts.Core.Composition;
-using PowerShortcuts.WinService;
-using PowerShortcuts.WinService.Composition;
-using PowerShortcuts.WinService.Interface;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
-using PowerShortcuts.WinService.Singleton;
+using PowerShortcuts.Host.Composition;
+using PowerShortcuts.Host.Interface;
+using PowerShortcuts.Host.Singleton;
 
 if (args is ["-d"] or ["--detach"])
 {
