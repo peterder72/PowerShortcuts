@@ -8,9 +8,9 @@ using PowerShortcuts.VirtualDesktop.Interface;
 namespace PowerShortcuts.Core;
 
 internal sealed class PowerShortcutsService(
-    IVirtualDesktopManager desktopManager, 
+    IVirtualDesktopManager desktopManager,
     IWindowManager windowManager,
-    ILogger<IPowerShortcutsService> logger): IPowerShortcutsService
+    ILogger<IPowerShortcutsService> logger) : IPowerShortcutsService
 {
     private const Modifiers SwitchDesktopModifier = Modifiers.Alt;
     private const Modifiers MoveWindowModifier = Modifiers.Alt | Modifiers.Shift;
@@ -36,15 +36,15 @@ internal sealed class PowerShortcutsService(
     public void Initialize()
     {
         if (m_Initialized) throw new InvalidOperationException("PowerShortcutsService already initialized");
-        
+
         var hotKeyManager = new HotKeyManager();
         var desktopSubscription = hotKeyManager.HotKeyPressed.Subscribe(DesktopHotKeyPressed);
         var registrations = new DisposableStack();
-        
+
         m_SubscriptionDisposables.Push(desktopSubscription);
         m_SubscriptionDisposables.Push(hotKeyManager);
         m_SubscriptionDisposables.Push(registrations);
-            
+
         var switchDesktopRegistrations = m_NumberKeyCodes
             .Select(key => hotKeyManager.Register(key, SwitchDesktopModifier))
             .ToArray();
@@ -52,6 +52,9 @@ internal sealed class PowerShortcutsService(
         var moveWindowRegistrations = m_NumberKeyCodes
             .Select(key => hotKeyManager.Register(key, MoveWindowModifier))
             .ToArray();
+
+        var pinWindowRegistration = hotKeyManager.Register(VirtualKeyCode.KEY_A, Modifiers.Shift | Modifiers.Control);
+        registrations.Push(pinWindowRegistration);
 
         registrations.PushRange(switchDesktopRegistrations);
         registrations.PushRange(moveWindowRegistrations);
@@ -68,9 +71,38 @@ internal sealed class PowerShortcutsService(
         logger.LogInformation("Shortcuts service terminated");
     }
 
-
     private void DesktopHotKeyPressed(HotKey hotKey)
     {
+        var windowInFocus = windowManager.GetWindowInFocus();
+        var focusedWindowTitle = windowInFocus != IntPtr.Zero ? windowManager.GetWindowTitle(windowInFocus) : null;
+
+        if (hotKey is { Key: VirtualKeyCode.KEY_A, Modifiers: (Modifiers.Shift | Modifiers.Control) })
+        {
+            if (windowInFocus == IntPtr.Zero) return;
+
+            var isPinnedApp = desktopManager.IsPinnedApp(windowInFocus);
+
+            // We don't pin apps, sounds unusable
+            if (isPinnedApp)
+            {
+                desktopManager.UnPinApp(windowInFocus);
+                return;
+            }
+
+            var isPinnedWindow = desktopManager.IsPinnedWindow(windowInFocus);
+
+            if (isPinnedWindow)
+            {
+                desktopManager.UnPinWindow(windowInFocus);
+            }
+            else
+            {
+                desktopManager.PinWindow(windowInFocus);
+            }
+
+            return;
+        }
+
         var desktopNumber = hotKey.Key switch
         {
             VirtualKeyCode.KEY_1 => 0,
@@ -97,7 +129,6 @@ internal sealed class PowerShortcutsService(
                 break;
             case MoveWindowModifier:
             {
-                var windowInFocus = windowManager.GetWindowInFocus();
                 var currentWindowDesktop = desktopManager.GetWindowDesktopNumber(windowInFocus);
 
                 if (currentWindowDesktop == desktopNumber) return;
@@ -113,7 +144,7 @@ internal sealed class PowerShortcutsService(
         if (m_Disposed) throw new ObjectDisposedException(nameof(PowerShortcutsService));
         m_Initialized = false;
         m_SubscriptionDisposables.Dispose();
-        
+
         logger.LogInformation("Shortcuts service disposed");
         m_Disposed = true;
     }
