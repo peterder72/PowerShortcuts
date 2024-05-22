@@ -1,4 +1,5 @@
-﻿using GlobalHotKeys;
+﻿using System.Diagnostics.CodeAnalysis;
+using GlobalHotKeys;
 using GlobalHotKeys.Native.Types;
 using Microsoft.Extensions.Logging;
 using PowerShortcuts.Core.Interface;
@@ -73,31 +74,40 @@ internal sealed class PowerShortcutsService(
 
     private void DesktopHotKeyPressed(HotKey hotKey)
     {
-        var windowInFocus = windowManager.GetWindowInFocus();
-        var focusedWindowTitle = windowInFocus != IntPtr.Zero ? windowManager.GetWindowTitle(windowInFocus) : null;
+        var windowInFocusHwnd = windowManager.GetWindowInFocus();
+        var hasFocusedWindow = windowInFocusHwnd != IntPtr.Zero;
+        
+        var focusedWindowTitle = hasFocusedWindow ? windowManager.GetWindowTitle(windowInFocusHwnd) : null;
 
         if (hotKey is { Key: VirtualKeyCode.KEY_A, Modifiers: (Modifiers.Shift | Modifiers.Control) })
         {
-            if (windowInFocus == IntPtr.Zero) return;
+            if (!hasFocusedWindow || focusedWindowTitle is null)
+            {
+                PowerShortcutsServiceLogging.LogNoPinWindowInFocus(logger);
+                return;
+            };
 
-            var isPinnedApp = desktopManager.IsPinnedApp(windowInFocus);
+            var isPinnedApp = desktopManager.IsPinnedApp(windowInFocusHwnd);
 
             // We don't pin apps, sounds unusable
             if (isPinnedApp)
             {
-                desktopManager.UnPinApp(windowInFocus);
+                desktopManager.UnPinApp(windowInFocusHwnd);
+                PowerShortcutsServiceLogging.LogUnpinApp(logger, focusedWindowTitle);
                 return;
             }
 
-            var isPinnedWindow = desktopManager.IsPinnedWindow(windowInFocus);
+            var isPinnedWindow = desktopManager.IsPinnedWindow(windowInFocusHwnd);
 
             if (isPinnedWindow)
             {
-                desktopManager.UnPinWindow(windowInFocus);
+                desktopManager.UnPinWindow(windowInFocusHwnd);
+                PowerShortcutsServiceLogging.LogUnpinWindow(logger, focusedWindowTitle);
             }
             else
             {
-                desktopManager.PinWindow(windowInFocus);
+                desktopManager.PinWindow(windowInFocusHwnd);
+                PowerShortcutsServiceLogging.LogPinWindow(logger, focusedWindowTitle);
             }
 
             return;
@@ -129,11 +139,11 @@ internal sealed class PowerShortcutsService(
                 break;
             case MoveWindowModifier:
             {
-                var currentWindowDesktop = desktopManager.GetWindowDesktopNumber(windowInFocus);
+                var currentWindowDesktop = desktopManager.GetWindowDesktopNumber(windowInFocusHwnd);
 
                 if (currentWindowDesktop == desktopNumber) return;
 
-                desktopManager.MoveWindowToDesktopNumber(windowInFocus, desktopNumber);
+                desktopManager.MoveWindowToDesktopNumber(windowInFocusHwnd, desktopNumber);
                 break;
             }
         }

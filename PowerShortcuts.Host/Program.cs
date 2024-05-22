@@ -32,6 +32,18 @@ builder.Services.AddBackgroundService();
 builder.Services.AddPowerShortcutsCore();
 builder.Services.AddPowerShortcutsTray();
 
+builder.Logging.ClearProviders();
+
+builder.Logging
+    .SetMinimumLevel(
+#if DEBUG
+    LogLevel.Debug
+#else
+    LogLevel.Information
+#endif
+)
+    .AddConsole();
+
 using var host = builder.Build();
 
 var events = host.Services.GetRequiredService<IHostSystemEvents>();

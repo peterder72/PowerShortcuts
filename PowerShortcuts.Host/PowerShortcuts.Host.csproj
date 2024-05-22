@@ -24,6 +24,7 @@
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
         <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -33,6 +34,7 @@
     <ItemGroup>
         <None Remove="**\*.png;**\*.jpg;**\*.ico" />
         <Resource Include="**\*.png;**\*.jpg;**\*.ico" />
+        <None Remove="Properties\launchSettings.json" />
     </ItemGroup>
 
     <ItemGroup>
