@@ -34,7 +34,6 @@
     <ItemGroup>
         <None Remove="**\*.png;**\*.jpg;**\*.ico" />
         <Resource Include="**\*.png;**\*.jpg;**\*.ico" />
-        <None Remove="Properties\launchSettings.json" />
     </ItemGroup>
 
     <ItemGroup>
