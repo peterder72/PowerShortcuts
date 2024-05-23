@@ -4,23 +4,16 @@ using PowerShortcuts.Core.Composition;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.WindowsAndMessaging;
+using PowerShortcuts.Host;
 using PowerShortcuts.Host.Composition;
 using PowerShortcuts.Host.Interface;
 using PowerShortcuts.Host.Singleton;
 
+UnhandledExceptionLogger.Initialize();
 
 if (args is ["-d"] or ["--detach"])
 {
-    try
-    {
-        CreateDetachedProcess();
-    }
-    catch (Exception e)
-    {
-        DisplayStartupErrorMessageBox("Could not detach process: " + e.Message);
-        throw;
-    }
-    
+    CreateDetachedProcess();
     Environment.Exit(0);
 }
 
