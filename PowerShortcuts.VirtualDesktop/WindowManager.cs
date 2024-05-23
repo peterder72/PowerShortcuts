@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.InteropServices;
+using System.Text;
 using PowerShortcuts.Utils;
 using PowerShortcuts.VirtualDesktop.Interface;
 using PowerShortcuts.VirtualDesktop.Interop;
@@ -42,8 +43,16 @@ internal sealed class WindowManager: IWindowManager
 
     public IntPtr GetWindowInFocus()
     {
-        var view = m_ApplicationViewCollection.GetViewInFocus();
-        return view.GetThumbnailWindow();
+        try
+        {
+            var view = m_ApplicationViewCollection.GetViewInFocus();
+            return view.GetThumbnailWindow();
+        } 
+        // No window in focus
+        catch (COMException e) when (e.HResult == -2147023728)
+        {
+            return IntPtr.Zero;
+        }
     }
 
     public void Dispose()
