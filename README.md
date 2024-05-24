@@ -15,6 +15,7 @@ may not (and probably will not) work on other versions due to the undocumented n
 - Shortcuts for **lightning fast Virtual Desktop** operations.
   - Alt+\<digit> to switch to desktop \<digit> 
   - Alt+Shift+\<digit> to move window in focus to desktop \<digit>
+  - Ctrl+Shift+A to toggle pinning the window across all virtual desktops
 
 ## Technical features
 
@@ -47,6 +48,5 @@ I was able to achieve a significant speedup in all operations.
 
 ## Future plans
 
-- Pinning windows to all desktops
 - Plugin support for custom shortcut loading
 - Support for other Windows versions
