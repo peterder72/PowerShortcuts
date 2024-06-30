@@ -1,5 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using PowerShortcuts.Utils;
 using PowerShortcuts.VirtualDesktop.Interface;
 using PowerShortcuts.VirtualDesktop.Interop;
@@ -12,11 +13,13 @@ internal sealed class WindowManager: IWindowManager
 {
     private readonly ApplicationViewCollection m_ApplicationViewCollection;
     private readonly DisposableStack m_Disposables = new();
+    private readonly ILogger<WindowManager> m_Logger;
 
-    public WindowManager()
+    public WindowManager(ILogger<WindowManager> logger)
     {
         var serviceProvider = ServiceProvider.Create();
         m_Disposables.Push(serviceProvider);
+        m_Logger = logger;
 
         var viewCollectionContainer = serviceProvider.QueryService<IApplicationViewCollection>(typeof(IApplicationViewCollection).GUID);
         m_Disposables.Push(viewCollectionContainer);
@@ -26,7 +29,7 @@ internal sealed class WindowManager: IWindowManager
         m_ApplicationViewCollection = viewCollection;
     }
 
-    public string GetWindowTitle(IntPtr hwnd)
+    public string? GetWindowTitle(IntPtr hwnd)
     {
         var length = Win32Methods.GetWindowTextLength(hwnd) + 1;
         var title = new StringBuilder(length);
@@ -35,7 +38,8 @@ internal sealed class WindowManager: IWindowManager
 
         if (res <= 0)
         {
-            throw new Exception($"Unsuccessfull win32 getwindowtext call: res={res}");
+            WindowManagerLogging.LogUnsuccessfulGetWindowTitle(m_Logger, res);
+            return null;
         }
         
         return title.ToString();
