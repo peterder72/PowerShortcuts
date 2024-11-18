@@ -11,24 +11,38 @@ namespace PowerShortcuts.VirtualDesktop;
 
 internal sealed class WindowManager: IWindowManager
 {
-    private readonly ApplicationViewCollection m_ApplicationViewCollection;
+    private readonly ComReconnectWrapper<ApplicationViewCollection> m_ApplicationViewCollection;
     private readonly DisposableStack m_Disposables = new();
     private readonly ILogger<WindowManager> m_Logger;
 
+    private const int NotFoundCode = -2147023728;
+
     public WindowManager(ILogger<WindowManager> logger)
     {
+        m_Logger = logger;
+        m_ApplicationViewCollection = new ComReconnectWrapper<ApplicationViewCollection>(CreateApplicationViewCollection, OnComReconnect);
+    }
+    
+    private void OnComReconnect()
+    {
+        m_Logger.LogWarning("COM connection dropped, attempting to reconnect");
+    }
+
+    private ApplicationViewCollection CreateApplicationViewCollection()
+    {
+        m_Logger.LogInformation("Establishing COM connection");
+        
+        m_Disposables.DisposeItems();
+        
         var serviceProvider = ServiceProvider.Create();
         m_Disposables.Push(serviceProvider);
-        m_Logger = logger;
 
         var viewCollectionContainer = serviceProvider.QueryService<IApplicationViewCollection>(typeof(IApplicationViewCollection).GUID);
         m_Disposables.Push(viewCollectionContainer);
 
-        var viewCollection = new ApplicationViewCollection(viewCollectionContainer.Value);
-
-        m_ApplicationViewCollection = viewCollection;
+        return new ApplicationViewCollection(viewCollectionContainer.Value);
     }
-
+    
     public string? GetWindowTitle(IntPtr hwnd)
     {
         var length = Win32Methods.GetWindowTextLength(hwnd) + 1;
@@ -36,29 +50,28 @@ internal sealed class WindowManager: IWindowManager
         
         var res = Win32Methods.GetWindowText(hwnd, title, length);
 
-        if (res <= 0)
-        {
-            WindowManagerLogging.LogUnsuccessfulGetWindowTitle(m_Logger, res);
-            return null;
-        }
+        if (res > 0) return title.ToString();
         
-        return title.ToString();
+        WindowManagerLogging.LogUnsuccessfulGetWindowTitle(m_Logger, res);
+        return null;
+
     }
 
     public IntPtr GetWindowInFocus()
     {
         try
         {
-            var view = m_ApplicationViewCollection.GetViewInFocus();
+            var view = m_ApplicationViewCollection.Execute(x => x.GetViewInFocus());
+            
             return view.GetThumbnailWindow();
         } 
         // No window in focus
-        catch (COMException e) when (e.HResult == -2147023728)
+        catch (COMException e) when (e.HResult == NotFoundCode)
         {
             return IntPtr.Zero;
         }
     }
-
+    
     public void Dispose()
     {
         m_Disposables.Dispose();

@@ -74,13 +74,13 @@ static void CreateDetachedProcess()
 
     if (ownLocation.EndsWith(".dll"))
     {
-        startInfo = new ProcessStartInfo
-        {
-            FileName = "dotnet",
-            Arguments = $"\"{ownLocation}\""
-        };
+        // Always published with bundled .net runtime
+        // and no guarantee that dotnet is in PATH
+        // so we need to start the process with the .exe (which is always there)
+        ownLocation = ownLocation.Replace(".dll", ".exe");
     }
-    else if (ownLocation.EndsWith(".exe"))
+    
+    if (ownLocation.EndsWith(".exe"))
     {
         startInfo = new ProcessStartInfo
         {
