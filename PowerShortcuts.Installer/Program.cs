@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -56,7 +57,8 @@ namespace PowerShortcuts.Installer
                 .Shortcuts = ShortcutDirectories
                 .Select(x => new FileShortcut(shortcutName, x)
                 {
-                    Arguments = detachedArguments
+                    Arguments = detachedArguments,
+                    Attributes = new Dictionary<string, string> {{"Show", "minimized"}}
                 })
                 .ToArray();
 

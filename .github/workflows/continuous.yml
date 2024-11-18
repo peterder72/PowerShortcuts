@@ -26,9 +26,9 @@ jobs:
     name: windows-latest
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: 'Cache: .nuke/temp, ~/.nuget/packages'
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             .nuke/temp
@@ -37,12 +37,12 @@ jobs:
       - name: 'Run: UploadArtifacts'
         run: ./build.cmd UploadArtifacts
       - name: 'Publish: PowerShortcuts'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: PowerShortcuts
           path: Deploy/PowerShortcuts
       - name: 'Publish: PowerShortcutsInstaller'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: PowerShortcutsInstaller
           path: Deploy/PowerShortcutsInstaller
